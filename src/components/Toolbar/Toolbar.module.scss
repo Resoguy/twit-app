@@ -1,0 +1,38 @@
+.toolbar {
+	background-color: slateblue;
+	display: flex;
+	justify-content: space-between;
+	color: snow;
+}
+.brandLogo,
+.navLink {
+	text-decoration: none;
+	color: snow;
+	transition: 150ms ease-in-out;
+	font-size: 16px;
+	padding: 15px 30px;
+	display: flex;
+	align-items: center;
+
+	&:hover {
+		background-color: darken(slateblue, 5%);
+	}
+}
+
+.brandLogo {
+	font-size: 21px;
+}
+
+.navList {
+	display: flex;
+	list-style-type: none;
+}
+.navItem {
+	display: flex;
+}
+
+.navText {
+	padding: 15px 30px;
+	display: flex;
+	align-items: center;
+}
