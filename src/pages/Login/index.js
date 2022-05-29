@@ -1,56 +1,63 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import * as yup from 'yup';
 import { loginAction } from '../../store/actionCreators';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import Card from '../../components/Card';
+import s from './Login.module.scss';
+
+const loginFormSchema = yup.object({
+	identifier: yup.string().required().min(3),
+	password: yup.string().required().min(6),
+});
 
 function Login() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [loginForm, setLoginForm] = useState({
-		identifier: '',
-		password: '',
-	});
 
-	const login = async e => {
-		e.preventDefault();
-
-		await dispatch(loginAction(loginForm));
+	const login = async (values, actions) => {
+		await dispatch(loginAction(values));
 		navigate('/');
 	};
 
 	return (
-		<div>
-			<h1>Login Page</h1>
+		<div className={s.loginWrapper}>
+			<Card padding>
+				<h1>Login Page</h1>
 
-			<div>
-				<form onSubmit={login}>
-					<div>
-						<label htmlFor='identifier'>Email or Username</label>
-						<input
-							type='text'
-							placeholder='Enter your email or username...'
-							id='identifier'
-							name='identifier'
-							value={loginForm.identifier}
-							onChange={e => setLoginForm({ ...loginForm, identifier: e.target.value })}
-						/>
-					</div>
+				<div>
+					<Formik
+						initialValues={{ identifier: '', password: '' }}
+						onSubmit={login}
+						validationSchema={loginFormSchema}
+					>
+						{({ isSubmitting }) => (
+							<Form>
+								<Field
+									as={Input}
+									label='Email or Username'
+									name='identifier'
+									placeholder='Enter your email or username...'
+								/>
 
-					<div>
-						<label htmlFor='password'>Password</label>
-						<input
-							type='password'
-							placeholder='Enter your password...'
-							id='password'
-							name='password'
-							value={loginForm.password}
-							onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
-						/>
-					</div>
+								<Field
+									as={Input}
+									label='Password'
+									type='password'
+									name='password'
+									placeholder='Enter your password...'
+								/>
 
-					<button type='submit'>Login</button>
-				</form>
-			</div>
+								<Button type='submit' isLoading={isSubmitting}>
+									Login
+								</Button>
+							</Form>
+						)}
+					</Formik>
+				</div>
+			</Card>
 		</div>
 	);
 }

@@ -1,0 +1,33 @@
+.btn {
+	padding: 10px 25px;
+	border-radius: 4px;
+	font-size: 16px;
+	border: 1px solid transparent;
+	transition: 150ms ease-in-out;
+	color: slategray;
+	background-color: snow;
+	cursor: pointer;
+
+	&.primary {
+		background-color: slateblue;
+		color: snow;
+
+		&:hover {
+			background-color: darken(slateblue, 5%);
+		}
+	}
+
+	&.secondary {
+		background-color: tomato;
+		color: snow;
+
+		&:hover {
+			background-color: darken(tomato, 5%);
+		}
+	}
+
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}

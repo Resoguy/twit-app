@@ -1,69 +1,72 @@
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { Form, Formik, Field } from 'formik';
+import * as yup from 'yup';
 import { registerAction } from '../../store/actionCreators';
+import Input from '../../components/Input';
+import Button from '../../components/Button';
+import Card from '../../components/Card';
+import s from './Register.module.scss';
+
+const registerFormSchema = yup.object({
+	username: yup.string().required().min(3),
+	email: yup.string().required().email(),
+	password: yup.string().required().min(6),
+});
 
 function Register() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const [registerForm, setRegisterForm] = useState({
-		username: '',
-		email: '',
-		password: '',
-	});
 
-	const register = async e => {
-		e.preventDefault();
-
-		await dispatch(registerAction(registerForm));
+	const register = async values => {
+		await dispatch(registerAction(values));
 		navigate('/');
 	};
 
 	return (
-		<div>
-			<h1>Register Page</h1>
+		<div className={s.registerWrapper}>
+			<Card padding>
+				<h1>Register Page</h1>
 
-			<div>
-				<form onSubmit={register}>
-					<div>
-						<label htmlFor='username'>Username</label>
-						<input
-							type='text'
-							placeholder='Enter your username...'
-							id='username'
-							name='username'
-							value={registerForm.username}
-							onChange={e => setRegisterForm({ ...registerForm, username: e.target.value })}
-						/>
-					</div>
+				<div>
+					<Formik
+						initialValues={{ username: '', email: '', password: '' }}
+						onSubmit={register}
+						validationSchema={registerFormSchema}
+					>
+						{({ isSubmitting }) => (
+							<Form>
+								<Field
+									as={Input}
+									label='Username'
+									placeholder='Enter your username...'
+									name='username'
+								/>
 
-					<div>
-						<label htmlFor='email'>Email</label>
-						<input
-							type='email'
-							placeholder='Enter your email...'
-							id='email'
-							name='email'
-							value={registerForm.email}
-							onChange={e => setRegisterForm({ ...registerForm, email: e.target.value })}
-						/>
-					</div>
+								<Field
+									as={Input}
+									label='Email'
+									placeholder='Enter your email...'
+									name='email'
+									type='email'
+								/>
 
-					<div>
-						<label htmlFor='password'>Password</label>
-						<input
-							type='password'
-							placeholder='Enter your password...'
-							id='password'
-							name='password'
-							value={registerForm.password}
-							onChange={e => setRegisterForm({ ...registerForm, password: e.target.value })}
-						/>
-					</div>
+								<Field
+									as={Input}
+									label='Password'
+									placeholder='Enter your password...'
+									name='password'
+									type='password'
+								/>
 
-					<button type='submit'>Register</button>
-				</form>
-			</div>
+								<Button type='submit' isLoading={isSubmitting}>
+									Register
+								</Button>
+							</Form>
+						)}
+					</Formik>
+				</div>
+			</Card>
 		</div>
 	);
 }
