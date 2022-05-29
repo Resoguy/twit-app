@@ -28,6 +28,11 @@ function Toolbar() {
 							<span className={s.navText}>Welcome, {user.username}</span>
 						</li>
 						<li className={s.navItem}>
+							<Link className={s.navLink} to='profile'>
+								Profile
+							</Link>
+						</li>
+						<li className={s.navItem}>
 							<a href='#' className={s.navLink} onClick={logout}>
 								Logout
 							</a>
