@@ -7,7 +7,13 @@ function Input({ label, id, name, type = 'text', ...rest }) {
 	return (
 		<div className={s.formGroup}>
 			{label && <label htmlFor={id || name}>{label}</label>}
-			<input type={type} id={id || name} name={name} {...rest} />
+
+			{type === 'textarea' ? (
+				<textarea id={id || name} name={name} {...rest}></textarea>
+			) : (
+				<input type={type} id={id || name} name={name} {...rest} />
+			)}
+
 			<ErrorMessage component={Msg} name={name} />
 		</div>
 	);

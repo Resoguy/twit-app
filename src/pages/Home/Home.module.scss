@@ -1,0 +1,23 @@
+.wrapper {
+	display: flex;
+
+	& > aside {
+		flex-basis: 300px;
+		flex-grow: 0;
+	}
+
+	& > main {
+		flex-grow: 1;
+	}
+}
+
+.feedWrapper {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 15px;
+	margin: 40px 0;
+}
+
+.formWrapper {
+	margin: 40px 0;
+}
