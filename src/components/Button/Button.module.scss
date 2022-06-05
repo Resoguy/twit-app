@@ -6,7 +6,23 @@
 	transition: 150ms ease-in-out;
 	color: slategray;
 	background-color: snow;
+	display: flex;
+	align-items: center;
 	cursor: pointer;
+
+	svg {
+		margin-right: 4px;
+	}
+
+	&.fab {
+		border-radius: 100%;
+		padding: 10px;
+		font-size: 21px;
+
+		svg {
+			margin: 0;
+		}
+	}
 
 	&.primary {
 		background-color: slateblue;
@@ -29,5 +45,19 @@
 	&:disabled {
 		opacity: 0.5;
 		cursor: not-allowed;
+	}
+}
+
+.loadingIcon {
+	animation: loading 1s ease-in-out infinite forwards;
+}
+
+@keyframes loading {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
 	}
 }

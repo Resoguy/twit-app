@@ -1,5 +1,6 @@
 import { Formik, Form, Field } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
+import { FiSend } from 'react-icons/fi';
 import Card from '../Card';
 import Input from '../Input';
 import Button from '../Button';
@@ -36,7 +37,7 @@ function TwitForm() {
 							label='Your Twit'
 						/>
 
-						<Button type='submit' isLoading={isSubmitting}>
+						<Button type='submit' isLoading={isSubmitting} icon={<FiSend />}>
 							Twit
 						</Button>
 					</Form>

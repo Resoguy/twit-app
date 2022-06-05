@@ -1,11 +1,12 @@
 import { createStore, applyMiddleware } from 'redux';
-import { SET_TOKEN, SET_USER, SET_TWITS } from './types';
+import { SET_TOKEN, SET_USER, SET_TWITS, SET_TWITS_LIKED_BY_ME } from './types';
 import thunk from 'redux-thunk';
 
 const INITIAL_STATE = {
 	token: null,
 	user: null,
 	twits: null,
+	twitsLikedByMe: null,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -18,6 +19,9 @@ const reducer = (state = INITIAL_STATE, action) => {
 
 		case SET_TWITS:
 			return { ...state, twits: action.payload };
+
+		case SET_TWITS_LIKED_BY_ME:
+			return { ...state, twitsLikedByMe: action.payload };
 
 		default:
 			return state;

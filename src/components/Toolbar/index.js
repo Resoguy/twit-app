@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutAction } from '../../store/actionCreators';
+import { FaTwitter } from 'react-icons/fa';
 import s from './Toolbar.module.scss';
 
 function Toolbar() {
@@ -18,7 +19,7 @@ function Toolbar() {
 	return (
 		<nav className={s.toolbar}>
 			<Link className={s.brandLogo} to='/'>
-				Twit App
+				<FaTwitter />
 			</Link>
 
 			<ul className={s.navList}>

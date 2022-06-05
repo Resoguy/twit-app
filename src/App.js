@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { checkLoginAction, fetchTwitsAction } from './store/actionCreators';
+import { checkLoginAction, fetchLikedTwitsAction, fetchTwitsAction } from './store/actionCreators';
 import s from './App.module.scss';
 import Toolbar from './components/Toolbar';
 import Home from './pages/Home';
