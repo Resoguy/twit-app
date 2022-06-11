@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { checkLoginAction, fetchLikedTwitsAction, fetchTwitsAction } from './store/actionCreators';
+import { checkLoginAction, fetchTwitsAction } from './store/actionCreators';
 import s from './App.module.scss';
 import Toolbar from './components/Toolbar';
 import Home from './pages/Home';
@@ -10,6 +10,8 @@ import Register from './pages/Register';
 import Profile from './pages/Profile';
 import PrivateRoute from './layouts/PrivateRoute';
 import PublicRoute from './layouts/PublicRoute';
+import MainLayout from './layouts/MainLayout';
+import TwitDetails from './pages/TwitDetails';
 
 function App() {
 	const dispatch = useDispatch();
@@ -24,7 +26,11 @@ function App() {
 			<Toolbar />
 			<div className={s.container}>
 				<Routes>
-					<Route path='/' element={<Home />} />
+					<Route path='/' element={<MainLayout />}>
+						<Route index element={<Home />} />
+						<Route path=':id' element={<TwitDetails />} />
+					</Route>
+
 					<Route
 						path='login'
 						element={

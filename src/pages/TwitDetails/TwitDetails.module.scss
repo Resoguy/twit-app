@@ -1,0 +1,10 @@
+.wrapper {
+	margin: 40px 0;
+}
+
+.replyWrapper {
+	margin: 40px 0;
+	display: grid;
+	grid-gap: 15px;
+	grid-template-columns: 1fr;
+}

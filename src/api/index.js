@@ -17,3 +17,15 @@ const addHeaders = config => {
 api.interceptors.request.use(addHeaders);
 
 export default api;
+
+export const fetchTwitDetails = async twitId => {
+	const { data } = await api.get(`/twits/${twitId}?populate=*`);
+
+	return data;
+};
+
+export const fetchRepliesByTwitId = async twitId => {
+	const { data } = await api.get(`/replies?filters[twit][id][$eq]=${twitId}&populate[0]=user`);
+
+	return data;
+};
