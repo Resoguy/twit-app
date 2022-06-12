@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { postLikeTwitAction, deleteLikeTwitAction } from '../../store/actionCreators';
 
-function TwitCard({ twit, onLike, onReplyClick }) {
+function TwitCard({ twit, onLike = () => null, onReplyClick = () => null }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = twit.attributes.user.data;
@@ -44,31 +44,42 @@ function TwitCard({ twit, onLike, onReplyClick }) {
 		onLike();
 	};
 
-	return (
-		<Link className={s.linkWrapper} to={`/${twit.id}`}>
-			<Card padding hoverable>
-				<h6>
-					{user.attributes.username} - {user.attributes.email}
-				</h6>
-				<p className={s.twitText}>{twit.attributes.text}</p>
+	const replyHandler = async () => {
+		if (!isAuthenticated) {
+			return navigate('/login');
+		}
 
-				<div className={s.actionsWrapper}>
-					<Button
-						icon={isLikedByMe ? <FaHeart /> : <FaRegHeart />}
-						onClick={likeHandler}
-						bubbling={false}
-					>
-						{likes.length || '0'}
-					</Button>
-					<Button icon={<FaRegCommentDots />} bubbling={false} onClick={onReplyClick}>
-						{replies.length || '0'}
-					</Button>
-					<Button icon={<FaRetweet />} bubbling={false}>
-						0
-					</Button>
-				</div>
-			</Card>
-		</Link>
+		return onReplyClick();
+	};
+
+	const goToDetails = () => {
+		navigate(`/${twit.id}`);
+	};
+
+	return (
+		<Card onClick={goToDetails} padding hoverable>
+			<Link className={s.userLink} to={`/profile/${user.id}`} onClick={e => e.stopPropagation()}>
+				{user.attributes.username} - {user.attributes.email}
+			</Link>
+			<p className={s.twitText}>{twit.attributes.text}</p>
+
+			<div className={s.actionsWrapper}>
+				<Button
+					icon={isLikedByMe ? <FaHeart /> : <FaRegHeart />}
+					onClick={likeHandler}
+					bubbling={false}
+					color='primary'
+				>
+					{likes.length || '0'}
+				</Button>
+				<Button icon={<FaRegCommentDots />} bubbling={false} onClick={replyHandler} color='primary'>
+					{replies.length || '0'}
+				</Button>
+				<Button icon={<FaRetweet />} bubbling={false} color='primary'>
+					0
+				</Button>
+			</div>
+		</Card>
 	);
 }
 

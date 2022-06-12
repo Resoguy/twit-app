@@ -37,7 +37,7 @@ function TwitForm() {
 							label='Your Twit'
 						/>
 
-						<Button type='submit' isLoading={isSubmitting} icon={<FiSend />}>
+						<Button type='submit' isLoading={isSubmitting} icon={<FiSend />} color='primary'>
 							Twit
 						</Button>
 					</Form>

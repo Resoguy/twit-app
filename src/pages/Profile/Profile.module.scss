@@ -1,0 +1,31 @@
+.usernameText {
+	font-size: 36px;
+}
+
+.emailText {
+	font-weight: normal;
+	color: slategray;
+	margin: 0 0 15px;
+}
+
+.userInfo {
+	svg {
+		color: slategray;
+		margin-right: 8px;
+	}
+
+	.bioText {
+		margin-bottom: 10px;
+	}
+
+	.birthdayText,
+	.locationText {
+		font-size: 14px;
+		display: flex;
+		align-items: center;
+	}
+
+	.birthdayText {
+		margin-bottom: 5px;
+	}
+}

@@ -28,6 +28,12 @@ function TwitDetails() {
 		setReplies(data.data);
 	};
 
+	const successHandler = async () => {
+		await fetchTwit();
+		await fetchReplies();
+		closeModal();
+	};
+
 	useEffect(() => {
 		fetchTwit();
 		fetchReplies();
@@ -38,11 +44,12 @@ function TwitDetails() {
 			{twit && <TwitCard twit={twit} onLike={fetchTwit} onReplyClick={openModal} />}
 
 			<div className={s.replyWrapper}>
-				{replies && replies.map(reply => <ReplyCard key={reply.id} reply={reply} />)}
+				{replies &&
+					replies.map(reply => <ReplyCard key={reply.id} reply={reply} onLike={fetchReplies} />)}
 			</div>
 
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<ReplyForm />
+				<ReplyForm onCancel={closeModal} onSuccess={successHandler} twitId={id} />
 			</Modal>
 		</div>
 	);

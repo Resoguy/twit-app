@@ -4,15 +4,16 @@ import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 function Button({
 	children,
 	isLoading = false,
-	color = 'primary',
+	color, // 'primary' | 'secondary'
+	variant = 'regular', // 'regular' | 'outline'
 	type = 'button',
 	icon,
 	fab = false,
 	bubbling = true,
-	onClick,
+	onClick = () => null,
 	...rest
 }) {
-	const className = `${s.btn} ${s[color]} ${fab ? s.fab : ''}`;
+	const className = `${s.btn} ${s[color]} ${s[variant]} ${fab ? s.fab : ''}`;
 
 	const clickHandler = event => {
 		if (bubbling) {

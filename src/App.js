@@ -29,6 +29,7 @@ function App() {
 					<Route path='/' element={<MainLayout />}>
 						<Route index element={<Home />} />
 						<Route path=':id' element={<TwitDetails />} />
+						<Route path='profile/:userId' element={<Profile />} />
 					</Route>
 
 					<Route
@@ -45,14 +46,6 @@ function App() {
 							<PublicRoute>
 								<Register />
 							</PublicRoute>
-						}
-					/>
-					<Route
-						path='profile'
-						element={
-							<PrivateRoute>
-								<Profile />
-							</PrivateRoute>
 						}
 					/>
 				</Routes>

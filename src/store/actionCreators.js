@@ -1,5 +1,11 @@
-import { SET_TOKEN, SET_USER, SET_TWITS, SET_TWITS_LIKED_BY_ME } from './types';
-import api from '../api';
+import {
+	SET_TOKEN,
+	SET_USER,
+	SET_TWITS,
+	SET_TWITS_LIKED_BY_ME,
+	SET_REPLIES_LIKED_BY_ME,
+} from './types';
+import api, { postReplyLike, deleteReplyLike, findReplyLike } from '../api';
 
 export const setTokenAction = token => ({ type: SET_TOKEN, payload: token });
 export const setUserAction = user => ({ type: SET_USER, payload: user });
@@ -11,6 +17,7 @@ export const loginAction = loginData => async dispatch => {
 	dispatch(setTokenAction(data.jwt));
 	dispatch(setUserAction(data.user));
 	dispatch(fetchLikedTwitsAction());
+	dispatch(fetchLikedRepliesAction());
 };
 
 export const registerAction = registerData => async dispatch => {
@@ -19,7 +26,6 @@ export const registerAction = registerData => async dispatch => {
 	localStorage.setItem('jwt', data.jwt);
 	dispatch(setTokenAction(data.jwt));
 	dispatch(setUserAction(data.user));
-	dispatch(fetchLikedTwitsAction());
 };
 
 export const checkLoginAction = () => async dispatch => {
@@ -32,6 +38,7 @@ export const checkLoginAction = () => async dispatch => {
 	dispatch(setTokenAction(token));
 	dispatch(setUserAction(data));
 	dispatch(fetchLikedTwitsAction());
+	dispatch(fetchLikedRepliesAction());
 };
 
 export const logoutAction = () => dispatch => {
@@ -40,6 +47,7 @@ export const logoutAction = () => dispatch => {
 	dispatch(setTokenAction(null));
 	dispatch(setUserAction(null));
 	dispatch(setLikedTwitsAction(null));
+	dispatch(setLikedRepliesAction(null));
 };
 
 export const setTwits = twits => ({ type: SET_TWITS, payload: twits });
@@ -65,9 +73,7 @@ export const setLikedTwitsAction = twits => ({ type: SET_TWITS_LIKED_BY_ME, payl
 export const fetchLikedTwitsAction = () => async (dispatch, getState) => {
 	const { user } = getState();
 
-	const { data } = await api.get(
-		`/twits?filters[likes][user][id][$containsi]=${user.id}&populate=*`
-	);
+	const { data } = await api.get(`/twits?filters[likes][user][id][$eq]=${user.id}&populate=*`);
 
 	dispatch(setLikedTwitsAction(data.data));
 };
@@ -89,4 +95,32 @@ export const deleteLikeTwitAction = (twitId, userId) => async dispatch => {
 	await api.delete(`/likes/${like.id}`);
 	dispatch(fetchTwitsAction());
 	dispatch(fetchLikedTwitsAction());
+};
+
+export const setLikedRepliesAction = replies => ({
+	type: SET_REPLIES_LIKED_BY_ME,
+	payload: replies,
+});
+
+export const fetchLikedRepliesAction = () => async (dispatch, getState) => {
+	const { user } = getState();
+
+	const { data } = await api.get(
+		`/replies?filters[reply_likes][user][id][$eq]=${user.id}&populate=*`
+	);
+
+	dispatch(setLikedRepliesAction(data.data));
+};
+
+export const postLikeReplyAction = likeData => async dispatch => {
+	await postReplyLike(likeData);
+
+	return dispatch(fetchLikedRepliesAction());
+};
+
+export const deleteLikeReplyAction = (replyId, userId) => async dispatch => {
+	const replyLike = await findReplyLike(replyId, userId);
+	await deleteReplyLike(replyLike.id);
+
+	return dispatch(fetchLikedRepliesAction());
 };

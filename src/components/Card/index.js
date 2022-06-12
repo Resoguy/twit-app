@@ -1,7 +1,14 @@
 import cc from 'classcat';
 import s from './Card.module.scss';
 
-function Card({ children, padding = false, shadow = true, border = true, hoverable = false }) {
+function Card({
+	children,
+	padding = false,
+	shadow = true,
+	border = true,
+	hoverable = false,
+	onClick = () => null,
+}) {
 	// const className = `${s.card} ${padding ? s.padding : ''} ${shadow ? s.shadow : ''}`;
 	const className = cc({
 		[s.card]: true,
@@ -11,7 +18,11 @@ function Card({ children, padding = false, shadow = true, border = true, hoverab
 		[s.hover]: hoverable,
 	});
 
-	return <div className={className}>{children}</div>;
+	return (
+		<div className={className} onClick={onClick} tabIndex={1}>
+			{children}
+		</div>
+	);
 }
 
 export default Card;

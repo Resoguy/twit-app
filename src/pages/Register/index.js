@@ -59,7 +59,7 @@ function Register() {
 									type='password'
 								/>
 
-								<Button type='submit' isLoading={isSubmitting}>
+								<Button type='submit' isLoading={isSubmitting} color='primary'>
 									Register
 								</Button>
 							</Form>

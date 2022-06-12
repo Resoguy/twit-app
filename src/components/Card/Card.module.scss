@@ -8,6 +8,7 @@
 
 	&.hover {
 		transition: 100ms ease-in-out;
+		cursor: pointer;
 
 		&:hover {
 			box-shadow: 0 4px 12px -4px black;

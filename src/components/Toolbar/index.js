@@ -29,7 +29,7 @@ function Toolbar() {
 							<span className={s.navText}>Welcome, {user.username}</span>
 						</li>
 						<li className={s.navItem}>
-							<Link className={s.navLink} to='profile'>
+							<Link className={s.navLink} to={`profile/${user.id}`}>
 								Profile
 							</Link>
 						</li>

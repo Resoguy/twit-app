@@ -50,7 +50,7 @@ function Login() {
 									placeholder='Enter your password...'
 								/>
 
-								<Button type='submit' isLoading={isSubmitting}>
+								<Button type='submit' isLoading={isSubmitting} color='primary'>
 									Login
 								</Button>
 							</Form>
