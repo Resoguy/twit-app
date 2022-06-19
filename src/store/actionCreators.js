@@ -28,7 +28,7 @@ export const registerAction = registerData => async dispatch => {
 	dispatch(setUserAction(data.user));
 };
 
-export const checkLoginAction = () => async dispatch => {
+export const fetchMeAction = () => async dispatch => {
 	const token = localStorage.getItem('jwt');
 
 	if (!token) return;
@@ -37,7 +37,12 @@ export const checkLoginAction = () => async dispatch => {
 
 	dispatch(setTokenAction(token));
 	dispatch(setUserAction(data));
-	dispatch(fetchLikedTwitsAction());
+};
+
+export const checkLoginAction = () => async dispatch => {
+	await dispatch(fetchMeAction());
+
+	await dispatch(fetchLikedTwitsAction());
 	dispatch(fetchLikedRepliesAction());
 };
 

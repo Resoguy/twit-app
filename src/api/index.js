@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { BASE_URL } from '../utils/constants';
 
 const api = axios.create({
-	baseURL: 'http://localhost:1337/api',
+	baseURL: `${BASE_URL}/api`,
 });
 
 const addHeaders = config => {
@@ -56,6 +57,18 @@ export const findReplyLike = async (replyId, userId) => {
 
 export const fetchUserDetails = async userId => {
 	const { data } = await api.get(`/users/${userId}?populate=*`);
+
+	return data;
+};
+
+export const updateUserDetails = async (userId, userData) => {
+	const { data } = await api.put(`/users/${userId}`, userData);
+
+	return data;
+};
+
+export const uploadPhoto = async formData => {
+	const { data } = await api.post(`/upload`, formData);
 
 	return data;
 };

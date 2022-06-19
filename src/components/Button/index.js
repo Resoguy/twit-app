@@ -19,6 +19,7 @@ function Button({
 		if (bubbling) {
 			onClick(event);
 		} else {
+			event.stopPropagation();
 			event.preventDefault();
 			onClick(event);
 		}

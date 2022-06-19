@@ -7,6 +7,7 @@ function Card({
 	shadow = true,
 	border = true,
 	hoverable = false,
+	relative = false,
 	onClick = () => null,
 }) {
 	// const className = `${s.card} ${padding ? s.padding : ''} ${shadow ? s.shadow : ''}`;
@@ -16,6 +17,7 @@ function Card({
 		[s.shadow]: shadow,
 		[s.border]: border,
 		[s.hover]: hoverable,
+		[s.relative]: relative,
 	});
 
 	return (

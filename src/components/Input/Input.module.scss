@@ -18,6 +18,11 @@
 		&:focus {
 			border-color: slateblue;
 		}
+
+		&:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
 	}
 
 	textarea {
