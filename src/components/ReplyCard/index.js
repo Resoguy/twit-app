@@ -2,14 +2,17 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import Card from '../Card';
 import Button from '../Button';
+import Image from '../Image';
 import s from './ReplyCard.module.scss';
 import { Link, useNavigate } from 'react-router-dom';
 import { postLikeReplyAction, deleteLikeReplyAction } from '../../store/actionCreators';
+import { getImageURL } from '../../utils';
 
 function ReplyCard({ reply, onLike }) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const user = reply.attributes.user.data;
+	const profilePhoto = user.attributes.photo?.data?.attributes;
 	const likes = reply.attributes.reply_likes.data;
 	const me = useSelector(state => state.user);
 	const isAuthenticated = !!me;
@@ -45,7 +48,10 @@ function ReplyCard({ reply, onLike }) {
 	return (
 		<Card padding>
 			<Link className={s.userLink} to={`/profile/${user.id}`}>
-				{user.attributes.username} - {user.attributes.email}
+				<Image src={getImageURL(profilePhoto)} alt='profile' border={false} size='small' />
+				<p>
+					{user.attributes.username} <span className={s.emailText}>{user.attributes.email}</span>
+				</p>
 			</Link>
 			<p className={s.replyText}>{reply.attributes.text}</p>
 

@@ -1,11 +1,15 @@
+import { useRef, useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { FiSend } from 'react-icons/fi';
+import { FaCameraRetro } from 'react-icons/fa';
 import Card from '../Card';
 import Input from '../Input';
 import Button from '../Button';
+import Image from '../Image';
 import * as yup from 'yup';
 import { postTwitAction } from '../../store/actionCreators';
+import s from './TwitForm.module.scss';
 
 const twitFormSchema = yup.object({
 	text: yup.string().required().max(250),
@@ -14,12 +18,31 @@ const twitFormSchema = yup.object({
 function TwitForm() {
 	const dispatch = useDispatch();
 	const user = useSelector(state => state.user);
+	const [imgPreviewURL, setImgPreviewURL] = useState(null);
+	const inputRef = useRef(null);
 
 	const sendTwit = async (values, { resetForm }) => {
 		const newTwit = { text: values.text, user: user.id };
 
 		await dispatch(postTwitAction(newTwit));
 		resetForm();
+	};
+
+	const openFileInput = () => {
+		inputRef.current.click();
+	};
+
+	const selectPicture = e => {
+		const file = e.target.files[0];
+		const reader = new FileReader();
+
+		reader.addEventListener('load', () => {
+			setImgPreviewURL(reader.result);
+		});
+
+		if (file) {
+			reader.readAsDataURL(file);
+		}
 	};
 
 	return (
@@ -36,6 +59,22 @@ function TwitForm() {
 							placeholder='Enter your twit...'
 							label='Your Twit'
 						/>
+
+						{imgPreviewURL && (
+							<div className={s.imageContainer}>
+								<Image src={imgPreviewURL} size='large' border={false} variant='rectangle' />
+							</div>
+						)}
+
+						<div className={s.actionsWrapper}>
+							<input id='picture-input' type='file' ref={inputRef} onChange={selectPicture} />
+							<Button
+								color='secondary'
+								icon={<FaCameraRetro />}
+								fab
+								onClick={openFileInput}
+							></Button>
+						</div>
 
 						<Button type='submit' isLoading={isSubmitting} icon={<FiSend />} color='primary'>
 							Twit

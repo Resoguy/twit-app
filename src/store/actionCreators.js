@@ -58,7 +58,9 @@ export const logoutAction = () => dispatch => {
 export const setTwits = twits => ({ type: SET_TWITS, payload: twits });
 
 export const fetchTwitsAction = () => async dispatch => {
-	const { data } = await api.get('/twits?populate=*&sort[0]=createdAt:desc');
+	const { data } = await api.get(
+		'/twits?populate[0]=user.photo&populate[1]=likes&populate[2]=replies&sort[0]=createdAt:desc'
+	);
 
 	dispatch(setTwits(data.data));
 };
@@ -77,6 +79,8 @@ export const setLikedTwitsAction = twits => ({ type: SET_TWITS_LIKED_BY_ME, payl
 
 export const fetchLikedTwitsAction = () => async (dispatch, getState) => {
 	const { user } = getState();
+
+	if (!user) return;
 
 	const { data } = await api.get(`/twits?filters[likes][user][id][$eq]=${user.id}&populate=*`);
 
@@ -109,6 +113,8 @@ export const setLikedRepliesAction = replies => ({
 
 export const fetchLikedRepliesAction = () => async (dispatch, getState) => {
 	const { user } = getState();
+
+	if (!user) return;
 
 	const { data } = await api.get(
 		`/replies?filters[reply_likes][user][id][$eq]=${user.id}&populate=*`

@@ -44,8 +44,7 @@ function Profile() {
 		formData.append('files', file);
 		formData.append('ref', 'plugin::users-permissions.user');
 		formData.append('refId', user.id);
-		formData.append('field', 'photo');
-		console.log(formData);
+		formData.append('field', event.target.name);
 		// file objesini backende yollayip profile editlemis olacagiz
 		await uploadPhoto(formData);
 		// profil datasini guncelleme
@@ -54,52 +53,84 @@ function Profile() {
 		dispatch(fetchMeAction());
 	};
 
+	const openPhotoInput = e => {
+		if (!isMyProfile) {
+			return e.preventDefault();
+		}
+	};
+
 	useEffect(() => {
 		fetchProfile();
 	}, [userId]);
 
 	return (
 		<>
-			<input className={s.fileInput} id='file-input' type='file' onChange={changePhoto} />
+			<input
+				className={s.fileInput}
+				name='photo'
+				id='file-input'
+				type='file'
+				onChange={changePhoto}
+			/>
+			<input
+				className={s.fileInput}
+				name='cover'
+				id='cover-input'
+				type='file'
+				onChange={changePhoto}
+			/>
 			<div className={s.wrapper}>
 				{user && (
-					<Card padding relative>
-						<label htmlFor='file-input'>
+					<>
+						<label htmlFor='cover-input' onClick={openPhotoInput}>
 							<Image
-								className={s.profileImg}
-								src={getImageURL(user.photo)}
-								alt='profile'
-								hoverable
+								src={getImageURL(user.cover, 'cover')}
+								alt='cover'
+								variant='rectangle'
+								border={false}
+								block
+								hoverable={isMyProfile}
 								hoverIcon={<FaCameraRetro />}
 							/>
 						</label>
+						<Card padding relative>
+							<label htmlFor='file-input' onClick={openPhotoInput}>
+								<Image
+									className={s.profileImg}
+									src={getImageURL(user.photo)}
+									alt='profile'
+									hoverable={isMyProfile}
+									hoverIcon={<FaCameraRetro />}
+								/>
+							</label>
 
-						<div className={s.cardHeader}>
-							<h2 className={s.usernameText}>{user.username}</h2>
-							{isMyProfile && (
-								<Button
-									variant='outline'
-									color='secondary'
-									icon={<FaRegEdit />}
-									onClick={openModal}
-								>
-									Edit
-								</Button>
-							)}
-						</div>
+							<div className={s.cardHeader}>
+								<h2 className={s.usernameText}>{user.username}</h2>
+								{isMyProfile && (
+									<Button
+										variant='outline'
+										color='secondary'
+										icon={<FaRegEdit />}
+										onClick={openModal}
+									>
+										Edit
+									</Button>
+								)}
+							</div>
 
-						<h4 className={s.emailText}>{user.email}</h4>
+							<h4 className={s.emailText}>{user.email}</h4>
 
-						<div className={s.userInfo}>
-							<p className={s.bioText}>{user.bio}</p>
-							<p className={s.birthdayText}>
-								<FaCalendarDay /> {user.birthday}
-							</p>
-							<p className={s.locationText}>
-								<FaMapMarkerAlt /> {user.location}
-							</p>
-						</div>
-					</Card>
+							<div className={s.userInfo}>
+								<p className={s.bioText}>{user.bio}</p>
+								<p className={s.birthdayText}>
+									<FaCalendarDay /> {user.birthday}
+								</p>
+								<p className={s.locationText}>
+									<FaMapMarkerAlt /> {user.location}
+								</p>
+							</div>
+						</Card>
+					</>
 				)}
 			</div>
 

@@ -1,16 +1,20 @@
 import Card from '../Card';
 import Button from '../Button';
+import Image from '../Image';
 import { useNavigate, Link } from 'react-router-dom';
 import s from './TwitCard.module.scss';
 import { FaHeart, FaRegHeart, FaRegCommentDots, FaRetweet } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { postLikeTwitAction, deleteLikeTwitAction } from '../../store/actionCreators';
+import { getImageURL } from '../../utils';
 
 function TwitCard({ twit, onLike = () => null, onReplyClick = () => null }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = twit.attributes.user.data;
+	// Optional chaining
+	const profilePhoto = user.attributes.photo?.data?.attributes; // user.attributes.photo && user.attributes.photo.data && user.attributes.photo.data.attributes
 	const likes = twit.attributes.likes.data;
 	const replies = twit.attributes.replies.data;
 	const me = useSelector(state => state.user);
@@ -59,7 +63,10 @@ function TwitCard({ twit, onLike = () => null, onReplyClick = () => null }) {
 	return (
 		<Card onClick={goToDetails} padding hoverable>
 			<Link className={s.userLink} to={`/profile/${user.id}`} onClick={e => e.stopPropagation()}>
-				{user.attributes.username} - {user.attributes.email}
+				<Image src={getImageURL(profilePhoto)} alt='profile' size='small' border={false} />
+				<p className={s.userText}>
+					{user.attributes.username} <span className={s.emailText}>{user.attributes.email}</span>
+				</p>
 			</Link>
 			<p className={s.twitText}>{twit.attributes.text}</p>
 

@@ -22,13 +22,17 @@ export default api;
 // Utility API functions
 
 export const fetchTwitDetails = async twitId => {
-	const { data } = await api.get(`/twits/${twitId}?populate=*`);
+	const { data } = await api.get(
+		`/twits/${twitId}?populate[0]=user.photo&populate[1]=likes&populate[2]=replies`
+	);
 
 	return data;
 };
 
 export const fetchRepliesByTwitId = async twitId => {
-	const { data } = await api.get(`/replies?filters[twit][id][$eq]=${twitId}&populate=*`);
+	const { data } = await api.get(
+		`/replies?filters[twit][id][$eq]=${twitId}&populate[0]=user.photo&populate[1]=reply_likes`
+	);
 
 	return data;
 };
