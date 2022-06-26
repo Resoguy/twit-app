@@ -4,8 +4,15 @@ import {
 	SET_TWITS,
 	SET_TWITS_LIKED_BY_ME,
 	SET_REPLIES_LIKED_BY_ME,
+	SET_MY_FOLLOWINGS,
 } from './types';
-import api, { postReplyLike, deleteReplyLike, findReplyLike } from '../api';
+import api, {
+	postReplyLike,
+	deleteReplyLike,
+	findReplyLike,
+	uploadPhoto,
+	fetchMyFollowings,
+} from '../api';
 
 export const setTokenAction = token => ({ type: SET_TOKEN, payload: token });
 export const setUserAction = user => ({ type: SET_USER, payload: user });
@@ -16,8 +23,9 @@ export const loginAction = loginData => async dispatch => {
 	localStorage.setItem('jwt', data.jwt);
 	dispatch(setTokenAction(data.jwt));
 	dispatch(setUserAction(data.user));
-	dispatch(fetchLikedTwitsAction());
-	dispatch(fetchLikedRepliesAction());
+	await dispatch(fetchLikedTwitsAction());
+	await dispatch(fetchLikedRepliesAction());
+	await dispatch(fetchMyFollowingsAction());
 };
 
 export const registerAction = registerData => async dispatch => {
@@ -43,7 +51,9 @@ export const checkLoginAction = () => async dispatch => {
 	await dispatch(fetchMeAction());
 
 	await dispatch(fetchLikedTwitsAction());
-	dispatch(fetchLikedRepliesAction());
+	await dispatch(fetchLikedRepliesAction());
+	// bu son await bekletilmiyor aslinda!
+	await dispatch(fetchMyFollowingsAction());
 };
 
 export const logoutAction = () => dispatch => {
@@ -53,24 +63,51 @@ export const logoutAction = () => dispatch => {
 	dispatch(setUserAction(null));
 	dispatch(setLikedTwitsAction(null));
 	dispatch(setLikedRepliesAction(null));
+	dispatch(setMyFollowingsAction(null));
+};
+
+export const setMyFollowingsAction = followings => ({
+	type: SET_MY_FOLLOWINGS,
+	payload: followings,
+});
+
+export const fetchMyFollowingsAction = () => async (dispatch, getState) => {
+	const { user } = getState();
+
+	if (!user) return;
+
+	const data = await fetchMyFollowings(user.id);
+	dispatch(setMyFollowingsAction(data.data));
 };
 
 export const setTwits = twits => ({ type: SET_TWITS, payload: twits });
 
 export const fetchTwitsAction = () => async dispatch => {
 	const { data } = await api.get(
-		'/twits?populate[0]=user.photo&populate[1]=likes&populate[2]=replies&sort[0]=createdAt:desc'
+		'/twits?populate[0]=user.photo&populate[1]=likes&populate[2]=replies&populate[3]=picture&sort[0]=createdAt:desc'
 	);
 
 	dispatch(setTwits(data.data));
 };
 
-export const postTwitAction = twit => async dispatch => {
+export const postTwitAction = (twit, file) => async dispatch => {
 	const token = localStorage.getItem('jwt');
 
 	if (!token) return;
 
-	await api.post('/twits', { data: twit });
+	const { data } = await api.post('/twits', { data: twit });
+	const twitId = data.data.id;
+
+	if (file) {
+		// file upload request
+		const formData = new FormData();
+		formData.append('files', file);
+		formData.append('ref', 'api::twit.twit');
+		formData.append('refId', twitId);
+		formData.append('field', 'picture');
+
+		await uploadPhoto(formData);
+	}
 
 	dispatch(fetchTwitsAction());
 };

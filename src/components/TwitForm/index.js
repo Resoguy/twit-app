@@ -23,8 +23,10 @@ function TwitForm() {
 
 	const sendTwit = async (values, { resetForm }) => {
 		const newTwit = { text: values.text, user: user.id };
+		const file = inputRef.current.files[0];
 
-		await dispatch(postTwitAction(newTwit));
+		await dispatch(postTwitAction(newTwit, file));
+		setImgPreviewURL(null);
 		resetForm();
 	};
 
@@ -42,6 +44,8 @@ function TwitForm() {
 
 		if (file) {
 			reader.readAsDataURL(file);
+		} else {
+			setImgPreviewURL(null);
 		}
 	};
 
@@ -62,7 +66,7 @@ function TwitForm() {
 
 						{imgPreviewURL && (
 							<div className={s.imageContainer}>
-								<Image src={imgPreviewURL} size='large' border={false} variant='rectangle' />
+								<Image src={imgPreviewURL} size='large' border={false} variant='rectangle' block />
 							</div>
 						)}
 

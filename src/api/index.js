@@ -23,7 +23,7 @@ export default api;
 
 export const fetchTwitDetails = async twitId => {
 	const { data } = await api.get(
-		`/twits/${twitId}?populate[0]=user.photo&populate[1]=likes&populate[2]=replies`
+		`/twits/${twitId}?populate[0]=user.photo&populate[1]=likes&populate[2]=replies&populate[3]=picture`
 	);
 
 	return data;
@@ -73,6 +73,30 @@ export const updateUserDetails = async (userId, userData) => {
 
 export const uploadPhoto = async formData => {
 	const { data } = await api.post(`/upload`, formData);
+
+	return data;
+};
+
+export const fetchRecommendedUsers = async filterId => {
+	const { data } = await api.get(
+		`/users?start=0&limit=3&filters[id][$ne]=${filterId}&populate[0]=photo`
+	);
+
+	return data;
+};
+
+export const fetchMyFollowings = async id => {
+	const { data } = await api.get(
+		`/follows?populate[0]=user&populate[1]=following&filters[user][id][$eq]=${id}`
+	);
+
+	return data;
+};
+
+export const fetchMyFollowers = async id => {
+	const { data } = await api.get(
+		`/follows?populate[0]=user&populate[1]=following&filters[following][id][$eq]=${id}`
+	);
 
 	return data;
 };

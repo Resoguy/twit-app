@@ -17,6 +17,7 @@ function TwitCard({ twit, onLike = () => null, onReplyClick = () => null }) {
 	const profilePhoto = user.attributes.photo?.data?.attributes; // user.attributes.photo && user.attributes.photo.data && user.attributes.photo.data.attributes
 	const likes = twit.attributes.likes.data;
 	const replies = twit.attributes.replies.data;
+	const picture = twit.attributes.picture.data;
 	const me = useSelector(state => state.user);
 	const isAuthenticated = !!me;
 	const isLikedByMe = useSelector(
@@ -69,6 +70,19 @@ function TwitCard({ twit, onLike = () => null, onReplyClick = () => null }) {
 				</p>
 			</Link>
 			<p className={s.twitText}>{twit.attributes.text}</p>
+
+			{picture && (
+				<div className={s.pictureWrapper}>
+					<Image
+						src={getImageURL(picture.attributes)}
+						alt={picture.attributes.name}
+						variant='rectangle'
+						border={false}
+						size='large'
+						block
+					/>
+				</div>
+			)}
 
 			<div className={s.actionsWrapper}>
 				<Button

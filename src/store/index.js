@@ -5,6 +5,7 @@ import {
 	SET_TWITS,
 	SET_TWITS_LIKED_BY_ME,
 	SET_REPLIES_LIKED_BY_ME,
+	SET_MY_FOLLOWINGS,
 } from './types';
 import thunk from 'redux-thunk';
 
@@ -14,6 +15,7 @@ const INITIAL_STATE = {
 	twits: null,
 	twitsLikedByMe: null,
 	repliesLikedByMe: null,
+	myFollowings: null,
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -32,6 +34,9 @@ const reducer = (state = INITIAL_STATE, action) => {
 
 		case SET_REPLIES_LIKED_BY_ME:
 			return { ...state, repliesLikedByMe: action.payload };
+
+		case SET_MY_FOLLOWINGS:
+			return { ...state, myFollowings: action.payload };
 
 		default:
 			return state;

@@ -3,6 +3,7 @@ import s from './Card.module.scss';
 
 function Card({
 	children,
+	className,
 	padding = false,
 	shadow = true,
 	border = true,
@@ -11,17 +12,18 @@ function Card({
 	onClick = () => null,
 }) {
 	// const className = `${s.card} ${padding ? s.padding : ''} ${shadow ? s.shadow : ''}`;
-	const className = cc({
+	const classNames = cc({
 		[s.card]: true,
 		[s.padding]: padding,
 		[s.shadow]: shadow,
 		[s.border]: border,
 		[s.hover]: hoverable,
 		[s.relative]: relative,
+		[className]: true,
 	});
 
 	return (
-		<div className={className} onClick={onClick} tabIndex={1}>
+		<div className={classNames} onClick={onClick} tabIndex={1}>
 			{children}
 		</div>
 	);

@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import s from './MainLayout.module.scss';
+import SideContent from '../../pages/SideContent';
 
 function MainLayout() {
 	return (
@@ -10,7 +11,9 @@ function MainLayout() {
 				<Outlet />
 			</main>
 
-			<aside>SIDE CONTENT 2</aside>
+			<aside>
+				<SideContent />
+			</aside>
 		</section>
 	);
 }
