@@ -100,3 +100,31 @@ export const fetchMyFollowers = async id => {
 
 	return data;
 };
+
+export const postFollow = async followData => {
+	const { data } = await api.post(`/follows`, { data: followData });
+
+	return data;
+};
+
+export const deleteFollow = async followId => {
+	const { data } = await api.delete(`/follows/${followId}`);
+
+	return data;
+};
+
+export const fetchProfileTwits = async userId => {
+	const { data } = await api.get(
+		`/twits?filters[user][id][$eq]=${userId}&populate[0]=user.photo&populate[1]=likes&populate[2]=replies&populate[3]=picture&sort[0]=createdAt:desc`
+	);
+
+	return data;
+};
+
+export const fetchProfileReplies = async userId => {
+	const { data } = await api.get(
+		`/replies?filters[user][id][$eq]=${userId}&populate[0]=user.photo&populate[1]=reply_likes`
+	);
+
+	return data;
+};

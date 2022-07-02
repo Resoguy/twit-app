@@ -12,6 +12,8 @@ import api, {
 	findReplyLike,
 	uploadPhoto,
 	fetchMyFollowings,
+	postFollow,
+	deleteFollow,
 } from '../api';
 
 export const setTokenAction = token => ({ type: SET_TOKEN, payload: token });
@@ -25,7 +27,7 @@ export const loginAction = loginData => async dispatch => {
 	dispatch(setUserAction(data.user));
 	await dispatch(fetchLikedTwitsAction());
 	await dispatch(fetchLikedRepliesAction());
-	await dispatch(fetchMyFollowingsAction());
+	return dispatch(fetchMyFollowingsAction());
 };
 
 export const registerAction = registerData => async dispatch => {
@@ -33,7 +35,7 @@ export const registerAction = registerData => async dispatch => {
 
 	localStorage.setItem('jwt', data.jwt);
 	dispatch(setTokenAction(data.jwt));
-	dispatch(setUserAction(data.user));
+	return dispatch(setUserAction(data.user));
 };
 
 export const fetchMeAction = () => async dispatch => {
@@ -44,7 +46,7 @@ export const fetchMeAction = () => async dispatch => {
 	const { data } = await api.get('/users/me');
 
 	dispatch(setTokenAction(token));
-	dispatch(setUserAction(data));
+	return dispatch(setUserAction(data));
 };
 
 export const checkLoginAction = () => async dispatch => {
@@ -63,7 +65,7 @@ export const logoutAction = () => dispatch => {
 	dispatch(setUserAction(null));
 	dispatch(setLikedTwitsAction(null));
 	dispatch(setLikedRepliesAction(null));
-	dispatch(setMyFollowingsAction(null));
+	return dispatch(setMyFollowingsAction(null));
 };
 
 export const setMyFollowingsAction = followings => ({
@@ -77,7 +79,19 @@ export const fetchMyFollowingsAction = () => async (dispatch, getState) => {
 	if (!user) return;
 
 	const data = await fetchMyFollowings(user.id);
-	dispatch(setMyFollowingsAction(data.data));
+	return dispatch(setMyFollowingsAction(data.data));
+};
+
+export const postFollowingAction = followData => async dispatch => {
+	await postFollow(followData);
+
+	return dispatch(fetchMyFollowingsAction());
+};
+
+export const deleteFollowingAction = followId => async dispatch => {
+	await deleteFollow(followId);
+
+	return dispatch(fetchMyFollowingsAction());
 };
 
 export const setTwits = twits => ({ type: SET_TWITS, payload: twits });
@@ -87,7 +101,7 @@ export const fetchTwitsAction = () => async dispatch => {
 		'/twits?populate[0]=user.photo&populate[1]=likes&populate[2]=replies&populate[3]=picture&sort[0]=createdAt:desc'
 	);
 
-	dispatch(setTwits(data.data));
+	return dispatch(setTwits(data.data));
 };
 
 export const postTwitAction = (twit, file) => async dispatch => {
@@ -109,7 +123,7 @@ export const postTwitAction = (twit, file) => async dispatch => {
 		await uploadPhoto(formData);
 	}
 
-	dispatch(fetchTwitsAction());
+	return dispatch(fetchTwitsAction());
 };
 
 export const setLikedTwitsAction = twits => ({ type: SET_TWITS_LIKED_BY_ME, payload: twits });
@@ -121,14 +135,14 @@ export const fetchLikedTwitsAction = () => async (dispatch, getState) => {
 
 	const { data } = await api.get(`/twits?filters[likes][user][id][$eq]=${user.id}&populate=*`);
 
-	dispatch(setLikedTwitsAction(data.data));
+	return dispatch(setLikedTwitsAction(data.data));
 };
 
 export const postLikeTwitAction = likeData => async dispatch => {
 	await api.post('/likes', { data: likeData });
 
-	dispatch(fetchTwitsAction());
-	dispatch(fetchLikedTwitsAction());
+	await dispatch(fetchTwitsAction());
+	return dispatch(fetchLikedTwitsAction());
 };
 
 export const deleteLikeTwitAction = (twitId, userId) => async dispatch => {
@@ -139,8 +153,8 @@ export const deleteLikeTwitAction = (twitId, userId) => async dispatch => {
 	const like = data.data[0];
 
 	await api.delete(`/likes/${like.id}`);
-	dispatch(fetchTwitsAction());
-	dispatch(fetchLikedTwitsAction());
+	await dispatch(fetchTwitsAction());
+	return dispatch(fetchLikedTwitsAction());
 };
 
 export const setLikedRepliesAction = replies => ({
@@ -157,7 +171,7 @@ export const fetchLikedRepliesAction = () => async (dispatch, getState) => {
 		`/replies?filters[reply_likes][user][id][$eq]=${user.id}&populate=*`
 	);
 
-	dispatch(setLikedRepliesAction(data.data));
+	return dispatch(setLikedRepliesAction(data.data));
 };
 
 export const postLikeReplyAction = likeData => async dispatch => {
